@@ -3,10 +3,8 @@
 GITHUB --> https://github.com/Dwarf-Nebula/alds
 ———————————————————————————————————————————————
 
-Jasper van Poelgeest
 1720840
 TICT_V1C / TCTI-V2ALDS1
-Frits Dannenberg
 '''
 
 #1.1
