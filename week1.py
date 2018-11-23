@@ -53,15 +53,16 @@ def getNumbers(zin):
 		returnlist = []
 		tempstring = ""
 		for letter in zin:
-				if (letter >= "0" and letter <= "9"):
-						tempstring += letter
-				else:
-						if (tempstring != ""):
-								returnlist.append(int(tempstring))
-								tempstring = ""
+			if (letter >= "0" and letter <= "9"):
+					tempstring += letter
+			else:
+					if (tempstring != ""):
+							returnlist.append(int(tempstring))
+							tempstring = ""
+		if (tempstring != ""): returnlist.append(int(tempstring))
 		return returnlist
 
-print(getNumbers('een123zin45 6met-632meerdere+7777getallen'))
+print(getNumbers('een123zin45 6met-632meerdere+7777getallen12'))
 
 #1.3
 """
@@ -113,18 +114,33 @@ counter/nGroepen: float
 Het aantal getelde groepen met 2+ personen die op dezelfde dag jarig zijn gedeeld door de hoeveelheid groepen.
 """
 import random
-def chanceTwoPeopleSameBirthday(nGroepen, groepGrootte):
-		assert(type(nGroepen) == int and type(groepGrootte) == int)
+
+def newChanceTwoPeopleSameBirthday(nGroepen, groepGrootte):
+	assert(type(nGroepen) == int and type(groepGrootte) == int)
+	counter = 0
+	for groep in range(nGroepen):
 		randomNumbers = []
-		counter = 0
-		for i in range(nGroepen):
-				randomNumbers.append([])
-				for j in range(groepGrootte):
-						randomNumbers[i].append(random.randrange(365))
-				for j in range(365):
-						if (randomNumbers[i].count(j) > 1):
-								counter+=1
-								break
-		return counter/nGroepen
+		for i in range(groepGrootte):
+			randomNumber = random.randrange(365)
+			if (randomNumber in randomNumbers):
+				counter+=1
+				break
+			else: randomNumbers.append(randomNumber)
+	return counter/nGroepen
+
+
+def chanceTwoPeopleSameBirthday(nGroepen, groepGrootte):
+	assert(type(nGroepen) == int and type(groepGrootte) == int)
+	randomNumbers = []
+	counter = 0
+	for i in range(nGroepen):
+		randomNumbers.append([])
+		for j in range(groepGrootte):
+			randomNumbers[i].append(random.randrange(365))
+		for j in range(365):
+			if (randomNumbers[i].count(j) > 1):
+				counter+=1
+				break
+	return counter/nGroepen
 		
-print(chanceTwoPeopleSameBirthday(100, 57))
+print(newChanceTwoPeopleSameBirthday(100, 23))
