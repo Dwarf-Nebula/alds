@@ -1,3 +1,11 @@
+'''
+———————————————————————————————————————————————
+GITHUB --> https://github.com/Dwarf-Nebula/alds
+———————————————————————————————————————————————
+
+1720840
+TICT_V1C / TCTI-V2ALDS1
+'''
 #3.1
 
 def check(a,i): # ga na of i aan a toegevoegd kan worden
