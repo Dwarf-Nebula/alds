@@ -536,7 +536,7 @@ class trie:
 			print("Couldn't open file")
 			return False
 	
-
+print("\n\n 3.3 Trie\n")
 boom = trie()
 
 boom.inputFile("randomtekst.txt")
