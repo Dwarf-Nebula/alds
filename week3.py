@@ -32,10 +32,7 @@ def research(N):
 		if check(a,i):
 			a.append(i)
 			if len(a) == N:
-				#print(a)
-				solutions.append(a[:])
-				#print(solutions[-1])
-				
+				solutions.append(a[:])		
 			else:
 				if research(N):
 					continue
@@ -92,12 +89,13 @@ class MyCircularLinkedList:
 					self.tail = self.tail.next
 			else:
 				current = self.tail.next
-				while current.next != None and current.next.data != e:
+				while current.next != self.tail.next and current.next.data != e:
 					current = current.next
-				if current.next != None:
+				if current.next.data != e:
+					return False
+				if current.next != self.tail:
 					current.next = current.next.next
-				if current.next == None:
-					print(5)
+				if current.next == self.tail:
 					self.tail = current
 
 print("\n\n 3.2 \n")
@@ -119,6 +117,7 @@ mylist.delete(3)
 print(mylist)
 
 #3.3
+import math
 
 class BSTNode:
 	def __init__(self,element,left,right):
@@ -275,7 +274,7 @@ class BSTNode:
 			return True
 		if self.element < e and self.right:
 			return self.right.rsearch(e)
-		if self.element > e and self.right:
+		if self.element > e and self.left:
 			return self.left.rsearch(e)
 		return False
 	
@@ -364,34 +363,181 @@ class BST:
 	
 	def rinsert(self, e):
 		self.root.rinsert(e)
+	
+	def showLevelOrder(self):
+		nodesToDo = [self.root]
+		nodesSeen = []
+		nodeIndex = 0
+		while nodesToDo:
+			if all(node is None for node in nodesToDo[nodeIndex:]):
+				break
+			nodesSeen.append(nodesToDo[nodeIndex])
+
+			if nodesToDo[nodeIndex]:
+				if nodesToDo[nodeIndex].left != None:
+					nodesToDo.append(nodesToDo[nodeIndex].left)
+				else:
+					nodesToDo.append(None)
+
+				if nodesToDo[nodeIndex].right != None:
+					nodesToDo.append(nodesToDo[nodeIndex].right)
+				else:
+					nodesToDo.append(None)
+			else:
+				nodesToDo.append(None)
+				nodesToDo.append(None)
+			nodeIndex+=1
+		levelSize = 0
+		maxLevelSize = 1
+		levelDepth = 0
+		outputNodes = [[]]
+		for node in nodesSeen:
+			try:
+				outputNodes[levelDepth].append(node.element)
+			except:
+				outputNodes[levelDepth].append("N")
+			levelSize+=1
+			if levelSize == maxLevelSize:
+				maxLevelSize *= 2
+				outputNodes.append([])
+				levelSize = 0
+				levelDepth += 1
+		
+		if not len(outputNodes[-1]): outputNodes.pop()
+		while levelSize < maxLevelSize and levelSize != 0:
+			outputNodes[levelDepth].append("N")
+			levelSize+=1
+
+		width = len(outputNodes[-1])
+		
+		levelCounter = 1
+		for nodes in outputNodes:
+			spaces = int(width/levelCounter)-1
+			print(" "*spaces, end = "")
+			for node in nodes:
+				print(node, end=" "*((spaces*2)+1))
+			print()
+			levelCounter*=2
 		
 #-----------------------------------------------
 
 print("\n\n 3.3 \n")
 b = BST()
-for i in range(5,11):
+for i in range(7, 10):
 	b.insert(i)
-for i in range(6):
+for i in range(7):
 	b.insert(i)
 print(b)
 print("Maximum:", b.findMax())
 print("3 in b:", b.rsearch(3)) #True
-print("11 in b:", b.rsearch(11))#False
-b.rinsert(11)
-print("11 in b:", b.rsearch(11))#True
-b.rinsert(11)
+print("10 in b:", b.rsearch(10))#False
+b.rinsert(10)
+print("10 in b:", b.rsearch(10))#True
+b.rinsert(10)
 print(b)
+b.showLevelOrder()
 
 
-'''
-• max(self) : bereken het maximale element
-• rsearch(self,e) : zoek recursief e
-• rinsert(self,e) : voeg recursief e toe
-• showLevelOrder(self) : toon de boom level na level. Doe dit niet recursief.
-Gebruik hierbij een queue. Plaats in de queue eerst de root.
-Pas de klassen 'BST' en 'BSTNode' aan. Pas alleen recursiviteit toe in 'BSTNode
-'''
+#3.4
+import csv
+def calcWordFreq(file):
+	assert(type(file) == str)
+	words = fileToList(file)
+	if words != False:
+		wordFreq = {}
+		for word in words:
+			if word in wordFreq:
+				wordFreq[word]+=1
+			else:
+				wordFreq[word] = 1
+		return wordFreq
+	return False
 
+def fileToList(fileString):
+	try:
+		file = open(fileString, "r")
+		lines = file.read().splitlines()
+		words = []
+		for line in lines:
+			tmp = line.split(" ")
+			for word in tmp:
+				words.append(word)
+		file.close()
+		return words
+	except:
+		print("Couldn't open file")
+		return False
 
-
+def dictToCSV(dictionary):
+	with open('counted_words.csv', mode='w') as countedWordFile:
+		countedWordWriter = csv.writer(countedWordFile, delimiter=',')
+		countedWordWriter.writerow(["Word", "Frequency"])
+		for key in dictionary:
+			countedWordWriter.writerow([key, dictionary[key]])
+		countedWordFile.close()
 	
+print("\n\n 3.3 Dictionary\n")
+dictToCSV(calcWordFreq("randomtekst.txt"))
+
+class trieNode:
+	def __init__(self):
+		self.freq = 0
+		self.chars = {}
+	
+	def insert(self, key, value):
+		if key in self.chars:
+			if len(value) < 1:
+				self.chars[key].freq +=1
+			else:
+				self.chars[key].insert(key+value[0], value[1:])
+		else:
+			if len(value) < 1:
+				self.chars[key] = trieNode()
+				self.chars[key].freq +=1
+			else:
+				self.chars[key] = trieNode()
+				self.chars[key].insert(key+value[0], value[1:])
+	
+	def writeFrequencyToFile(self, csvWriter):
+		for key in self.chars:
+			if self.chars[key].freq > 0:
+				csvWriter.writerow([key, self.chars[key].freq])
+			self.chars[key].writeFrequencyToFile(csvWriter)
+	
+	
+class trie:
+	def __init__(self):
+		self.root = trieNode()
+	
+	def insert(self, value):
+		self.root.insert(value[0], value[1:])
+		
+	def writeFrequencyToFile(self, outputFileName):
+		assert(type(outputFileName) == str)
+		with open(outputFileName, mode='w') as countedWordFile:
+			countedWordWriter = csv.writer(countedWordFile, delimiter=',')
+			countedWordWriter.writerow(["Word", "Frequency"])
+			
+			for key in self.root.chars:
+				if self.root.chars[key].freq > 0:
+					countedWordWriter.writerow([key, self.root.chars[key].freq])
+				self.root.chars[key].writeFrequencyToFile(countedWordWriter)
+	
+	def inputFile(self, fileString):
+		try:
+			file = open(fileString, "r")
+			lines = file.read().splitlines()
+			for line in lines:
+				tmp = line.split(" ")
+				for word in tmp:
+					self.root.insert(word[0], word[1:])
+			file.close()
+		except:
+			print("Couldn't open file")
+			return False
+	
+
+boom = trie()
+
+boom.inputFile("randomtekst.txt")
+boom.writeFrequencyToFile("counted_words2.csv")
