@@ -1,3 +1,11 @@
+'''
+———————————————————————————————————————————————
+GITHUB --> https://github.com/Dwarf-Nebula/alds
+———————————————————————————————————————————————
+1720840
+TICT_V1C / TCTI-V2ALDS1
+'''
+
 class Vertex:
 	def __init__(self, data):
 		self.data = data
